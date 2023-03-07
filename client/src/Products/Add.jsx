@@ -1,4 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+
 
 const Add = () => {
     const [product, setProduct] = useState({
@@ -9,9 +12,22 @@ const Add = () => {
         cena: null,
     });
 
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
         setProduct(prev=>({...prev, [e.target.name]: e.target.value}));
     }
+
+    const handleClick = async e => {
+        e.preventDefault();
+        try {
+            await axios.post("http://localhost:8800/produkti", product);
+            navigate("/");
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     console.log(product)
   return (
     <div className='container d-flex justify-content-center align-items-center vh-100 flex-column'>
@@ -38,6 +54,8 @@ const Add = () => {
                 <input className='form-control'onChange={handleChange} type="number" placeholder='Цена на артикул' name='cena' required/>
             </div>
         </div>
+
+        <button className="btn" onClick={handleClick}>Добави</button>
     </div>
   )
 }
